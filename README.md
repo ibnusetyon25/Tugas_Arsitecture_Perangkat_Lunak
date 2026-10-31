@@ -1,6 +1,9 @@
 # Tugas Arsitektur Perangkat Lunak - Containerization & Orchestration
 
-Repositori ini berisi implementasi kontainerisasi aplikasi web sederhana berbasis **Python Flask** dengan menerapkan *best practices* Docker (Multi-stage build, non-root user, Alpine Linux) serta konfigurasi multi-kontainer menggunakan Docker Compose dan orkestrasi Kubernetes.
+**Nama Mahasiswa:** Ibnu Setyo Nugroho  
+**NIM:** 257110015  
+**Mata Kuliah:** Arsitektur Perangkat Lunak  
+**Dosen Pengampu:** Dr. Edi Faizal, S.T., M.Cs.  
 
 ---
 

@@ -1,4 +1,6 @@
 # LAPORAN TUGAS INDIVIDU: KONTAINERISASI DAN ORKESTRASI APLIKASI WEB PYTHON FLASK
+**Nama Mahasiswa:** Ibnu Setyo Nugroho  
+**NIM:** 257110015  
 **Mata Kuliah:** Arsitektur Perangkat Lunak  
 **Dosen Pengampu:** Dr. Edi Faizal, S.T., M.Cs.  
 **Topik:** Dockerfile Best Practices, Multi-Container, dan Kubernetes Manifest  
@@ -28,7 +30,7 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # STAGE 2: Production Runner
 FROM python:3.11-alpine AS runner
-LABEL maintainer="mahasiswa@univ.ac.id" description="Flask Web App"
+LABEL maintainer="Ibnu Setyo Nugroho (NIM: 257110015)" description="Flask Web App"
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PORT=5000

@@ -154,7 +154,7 @@ HTML_TEMPLATE = """
         </div>
 
         <div class="footer">
-            Multi-Stage Build | Non-Root User | Alpine Linux | Kubernetes Ready
+            Ibnu Setyo Nugroho (NIM: 257110015) | Multi-Stage Build | Non-Root User | Alpine Linux
         </div>
     </div>
 </body>

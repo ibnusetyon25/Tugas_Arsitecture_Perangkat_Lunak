@@ -162,6 +162,8 @@
 <div class="header-container">
     <h1>Laporan Tugas Individu: Kontainerisasi & Orkestrasi</h1>
     <div class="meta-info">
+        <span><strong>Nama Mahasiswa:</strong> Ibnu Setyo Nugroho</span>
+        <span><strong>NIM:</strong> 257110015</span>
         <span><strong>Mata Kuliah:</strong> Arsitektur Perangkat Lunak</span>
         <span><strong>Dosen Pengampu:</strong> Dr. Edi Faizal, S.T., M.Cs.</span>
         <span><strong>Topik:</strong> Dockerfile & Analisis (Python Flask)</span>
@@ -188,7 +190,7 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # STAGE 2: Production Runner
 FROM python:3.11-alpine AS runner
-LABEL maintainer="mahasiswa@univ.ac.id" description="Flask Web App"
+LABEL maintainer="Ibnu Setyo Nugroho (NIM: 257110015)" description="Flask Web App"
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=5000
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 WORKDIR /app

@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 FROM python:3.11-alpine AS runner
 
 # Metadata image
-LABEL maintainer="mahasiswa@universitas.ac.id" \
+LABEL maintainer="Ibnu Setyo Nugroho (NIM: 257110015)" \
       description="Flask Web App - Optimized Production Image"
 
 # Variabel lingkungan runtime
