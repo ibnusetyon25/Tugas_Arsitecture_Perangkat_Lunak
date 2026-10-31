@@ -109,5 +109,11 @@ Hasil perbandingan:
 
 ---
 
+## 🌐 Tautan Repositori GitHub
+- **URL Repositori:** [https://github.com/ibnusetyon25/Tugas_Arsitecture_Perangkat_Lunak](https://github.com/ibnusetyon25/Tugas_Arsitecture_Perangkat_Lunak)
+
+---
+
 ## 📄 Laporan PDF
 Dokumentasi tertulis lengkap (analisis instruksi Dockerfile, perbandingan optimasi, dan manifest Kubernetes) tersedia pada file `LAPORAN.pdf`.
+

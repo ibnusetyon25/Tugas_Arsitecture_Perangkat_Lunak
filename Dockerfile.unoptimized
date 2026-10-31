@@ -19,3 +19,4 @@ EXPOSE 5000
 # Dijalankan sebagai default user (root) - risiko keamanan tinggi
 # Menggunakan server development Flask bawaan (tidak cocok untuk production)
 CMD ["python", "app.py"]
+

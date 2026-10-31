@@ -199,5 +199,5 @@ spec:
 ---
 
 ## 6. Repositori GitHub
-- **Tautan Repositori:** `https://github.com/username/Tugas_Arsitekture_Perangkat_Lunak`
+- **Tautan Repositori:** `https://github.com/ibnusetyon25/Tugas_Arsitecture_Perangkat_Lunak`
 - **Verifikasi Pengujian:** Berhasil diuji melalui `docker build`, `docker run`, dan `docker compose up`.
