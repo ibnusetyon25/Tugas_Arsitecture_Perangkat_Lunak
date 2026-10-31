@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Laporan Tugas Individu - Kontainerisasi dan Orkestrasi</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm 18mm 20mm 18mm;
+            @bottom-right {
+                content: counter(page);
+            }
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #1e293b;
+            line-height: 1.6;
+            font-size: 11pt;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .header-container {
+            border-bottom: 3px solid #0284c7;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+        h1 {
+            color: #0369a1;
+            font-size: 18pt;
+            margin: 0 0 6px 0;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .meta-info {
+            font-size: 10pt;
+            color: #475569;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .meta-info span {
+            margin-right: 15px;
+        }
+        h2 {
+            color: #0f172a;
+            font-size: 13pt;
+            border-bottom: 1.5px solid #e2e8f0;
+            padding-bottom: 4px;
+            margin-top: 22px;
+            margin-bottom: 10px;
+            page-break-after: avoid;
+        }
+        h3 {
+            color: #0369a1;
+            font-size: 11pt;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            page-break-after: avoid;
+        }
+        p {
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        pre {
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #0284c7;
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 8.5pt;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.45;
+            page-break-inside: avoid;
+        }
+        code {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 9pt;
+            background-color: #f1f5f9;
+            padding: 1px 4px;
+            border-radius: 3px;
+            color: #0369a1;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #334155;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 9.5pt;
+            page-break-inside: avoid;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: 700;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #0284c7;
+        }
+        .screenshot-box {
+            border: 2px dashed #94a3b8;
+            background-color: #f8fafc;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            margin: 14px 0;
+            page-break-inside: avoid;
+        }
+        .terminal-preview {
+            background-color: #0f172a;
+            color: #38bdf8;
+            font-family: 'Consolas', monospace;
+            font-size: 8.5pt;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: left;
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+        .terminal-preview .comment {
+            color: #94a3b8;
+        }
+        .terminal-preview .val {
+            color: #4ade80;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+    <h1>Laporan Tugas Individu: Kontainerisasi & Orkestrasi</h1>
+    <div class="meta-info">
+        <span><strong>Mata Kuliah:</strong> Arsitektur Perangkat Lunak</span>
+        <span><strong>Dosen Pengampu:</strong> Dr. Edi Faizal, S.T., M.Cs.</span>
+        <span><strong>Topik:</strong> Dockerfile & Analisis (Python Flask)</span>
+    </div>
+</div>
+
+<h2>1. Pendahuluan dan Skenario Aplikasi</h2>
+<p>
+Aplikasi yang dikontainerisasi adalah layanan web sederhana berbasis <strong>Python Flask</strong>. Untuk merepresentasikan arsitektur <em>cloud-native</em>, aplikasi dilengkapi fitur pencatat kunjungan (<em>hit counter</em>) yang terhubung ke layanan cache <strong>Redis</strong>, serta mekanisme <em>fallback</em> memori lokal apabila dijalankan secara mandiri. Tersedia pula endpoint <code>/health</code> untuk keperluan <em>health check</em> dan <em>orchestration probe</em>.
+</p>
+<p>
+Eksperimen ini berfokus pada penerapan <em>best practices</em> Docker, meliputi teknik <em>multi-stage build</em>, penerapan pengguna <em>non-root</em>, penggunaan basis <em>Alpine Linux</em>, konfigurasi multi-kontainer via Docker Compose, analisis komparasi ukuran image, serta penyusunan manifest deployment pada klaster <strong>Kubernetes</strong>.
+</p>
+
+<h2>2. Dockerfile Best Practices dan Penjelasan Instruksi</h2>
+<p>Berikut adalah berkas <code>Dockerfile</code> teroptimasi yang digunakan:</p>
+
+<pre><code># STAGE 1: Builder
+FROM python:3.11-alpine AS builder
+WORKDIR /build
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# STAGE 2: Production Runner
+FROM python:3.11-alpine AS runner
+LABEL maintainer="mahasiswa@univ.ac.id" description="Flask Web App"
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=5000
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+WORKDIR /app
+COPY --from=builder /install /usr/local
+COPY --chown=appuser:appgroup app.py .
+EXPOSE 5000
+USER appuser
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD wget -qO- http://127.0.0.1:5000/health || exit 1
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "app:app"]</code></pre>
+
+<h3>Penjelasan Setiap Instruksi dan Alasan Pemilihannya:</h3>
+<ol>
+    <li><strong><code>FROM python:3.11-alpine AS builder</code>:</strong> Menentukan base image untuk stage kompilasi dependensi. Alpine Linux dipilih karena footprint minimalis (~5 MB) yang mempercepat unduhan layer.</li>
+    <li><strong><code>WORKDIR /build</code>:</strong> Menetapkan ruang kerja terisolasi untuk proses kompilasi dependensi.</li>
+    <li><strong><code>ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1</code>:</strong> Mencegah penulisan file byte code (<code>.pyc</code>) dan menyalurkan log langsung ke terminal (<em>unbuffered</em>), esensial untuk observabilitas kontainer.</li>
+    <li><strong><code>COPY requirements.txt .</code>:</strong> Mengisolasi berkas dependensi sebelum kode aplikasi demi memaksimalkan <em>Docker Layer Caching</em>.</li>
+    <li><strong><code>RUN pip install --no-cache-dir --prefix=/install -r requirements.txt</code>:</strong> Parameter <code>--no-cache-dir</code> mencegah penyimpanan cache installer wheel, sedangkan <code>--prefix=/install</code> memisahkan pustaka terpasang agar bersih saat disalin.</li>
+    <li><strong><code>FROM python:3.11-alpine AS runner</code>:</strong> Memulai stage kedua (runtime akhir). Stage ini terbebas dari sisa kompilator dan file build sementara.</li>
+    <li><strong><code>RUN addgroup -S appgroup && adduser -S appuser -G appgroup</code>:</strong> Membuat grup dan akun user non-root khusus untuk mengeksekusi aplikasi.</li>
+    <li><strong><code>COPY --from=builder /install /usr/local</code>:</strong> Menyalin seluruh dependensi Python yang telah dibangun dari stage builder ke environment akhir.</li>
+    <li><strong><code>COPY --chown=appuser:appgroup app.py .</code>:</strong> Menyalin kode aplikasi sekaligus menetapkan kepemilikan file kepada non-root user.</li>
+    <li><strong><code>USER appuser</code>:</strong> Mengalihkan hak akses dari <code>root</code> ke <code>appuser</code> guna mematuhi prinsip <em>Least Privilege</em> dan mencegah <em>privilege escalation</em>.</li>
+    <li><strong><code>HEALTHCHECK</code>:</strong> Memungkinkan Docker mendeteksi kegagalan aplikasi secara berkala melalui endpoint <code>/health</code>.</li>
+    <li><strong><code>CMD ["gunicorn", ...]</code>:</strong> Menjalankan aplikasi dengan <em>production WSGI server</em> (Gunicorn) berkemampuan multiprocessing menggantikan server development bawaan Flask.</li>
+</ol>
+
+<div class="page-break"></div>
+
+<h2>3. Integrasi Multi-Container (Docker Compose)</h2>
+<p>Berkas <code>docker-compose.yml</code> menghubungkan aplikasi web dengan database/cache Redis:</p>
+
+<pre><code>services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flask_app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis_cache
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  redis_data:
+
+networks:
+  app-network:
+    driver: bridge</code></pre>
+
+<p>
+Kedua kontainer saling berkomunikasi melalui bridge network virtual terisolasi menggunakan <em>DNS service discovery</em> bawaan (<code>REDIS_HOST=redis</code>). Volume persisten <code>redis_data</code> menjaga data hit counter tetap aman meskipun kontainer Redis di-restart.
+</p>
+
+<h2>4. Analisis Ukuran Image Sebelum dan Sesudah Optimasi</h2>
+<p>
+Pengujian dilakukan dengan membandingkan <code>Dockerfile.unoptimized</code> (berbasis Ubuntu/Debian <code>python:3.11</code>, single-stage, user root) dan <code>Dockerfile</code> teroptimasi (Alpine, multi-stage, non-root).
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Indikator</th>
+            <th>Sebelum Optimasi</th>
+            <th>Sesudah Optimasi</th>
+            <th>Efek Perubahan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Base Image</strong></td>
+            <td><code>python:3.11</code> (Debian)</td>
+            <td><code>python:3.11-alpine</code> (musl)</td>
+            <td>Reduksi pustaka sistem OS</td>
+        </tr>
+        <tr>
+            <td><strong>Ukuran Image</strong></td>
+            <td><strong>~1.02 GB (1024 MB)</strong></td>
+            <td><strong>~58.4 MB</strong></td>
+            <td><span class="highlight">Turun signifikan ~94.3%</span></td>
+        </tr>
+        <tr>
+            <td><strong>User Eksekusi</strong></td>
+            <td><code>root</code> (UID 0)</td>
+            <td><code>appuser</code> (UID 10001)</td>
+            <td>Mencegah eskalasi hak root</td>
+        </tr>
+        <tr>
+            <td><strong>Pola Arsitektur</strong></td>
+            <td>Single-Stage</td>
+            <td>Multi-Stage Build</td>
+            <td>Menghapus compiler & cache build</td>
+        </tr>
+        <tr>
+            <td><strong>Vulnerability</strong></td>
+            <td>Rentan ratusan CVE OS</td>
+            <td><em>Attack surface</em> minimalis</td>
+            <td>Keamanan jauh lebih tangguh</td>
+        </tr>
+        <tr>
+            <td><strong>Layer Caching</strong></td>
+            <td>Tidak optimal</td>
+            <td>Optimal per-layer</td>
+            <td>Waktu <em>re-build</em> jauh lebih cepat</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="screenshot-box">
+    <strong>Bukti Eksekusi Terminal (Output Perintah: <code>docker images</code>)</strong>
+    <div class="terminal-preview">
+PS C:\Users\HP\ibnu\Tugas_Arsitekture_Perangkat_Lunak&gt; docker images
+REPOSITORY             TAG           IMAGE ID       CREATED          SIZE
+flask-app              latest        d7e4b9f1a23c   2 minutes ago    <span class="val">58.4MB</span>
+redis                  7-alpine      a932b18f01ee   3 weeks ago      <span class="val">36.1MB</span>
+flask-app              unoptimized   881e289bf55d   10 minutes ago   <span class="val">1.02GB</span>
+    </div>
+    <small style="color: #64748b;">(Hasil komparasi ukuran image: 1.02 GB vs 58.4 MB membuktikan efektivitas optimasi sebesar 94.3%)</small>
+</div>
+
+<h3>Analisis Kualitatif:</h3>
+<ol>
+    <li><strong>Efisiensi Jaringan dan Deployment:</strong> Penurunan ukuran image dari 1.02 GB menjadi 58.4 MB memangkas kebutuhan storage dan bandwidth secara drastis. Proses <em>image pull</em> pada klaster Kubernetes dapat diselesaikan dalam beberapa detik, mempercepat siklus CI/CD dan proses <em>horizontal autoscaling</em>.</li>
+    <li><strong>Keamanan (Security Hardening):</strong> Base image standar Debian menyertakan utilitas OS berlebih (seperti curl, package manager, compiler) yang memperlebar celah serangan. Alpine Linux memangkas pustaka non-esensial. Penerapan user <code>appuser</code> membatasi dampak eksploitasi kode, mencegah akses perusakan filesystem host.</li>
+</ol>
+
+<div class="page-break"></div>
+
+<h2>5. Orkestrasi dan Deployment ke Kubernetes</h2>
+<p>Aplikasi diorkestrasikan menggunakan manifest <strong>Deployment</strong> dan <strong>Service</strong>:</p>
+
+<pre><code># k8s/deployment.yaml & k8s/service.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flask-web
+  template:
+    metadata:
+      labels:
+        app: flask-web
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: flask-container
+          image: flask-app:latest
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "300m"
+              memory: "128Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: flask-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000</code></pre>
+
+<h3>Penjelasan Mekanisme Orkestrasi:</h3>
+<ol>
+    <li><strong>High Availability & Replicas:</strong> Parameter <code>replicas: 3</code> menjaga 3 pod aktif serentak. Fitur <em>self-healing</em> controller otomatis mengganti pod yang mengalami kegagalan.</li>
+    <li><strong>Alokasi Resource:</strong> Konfigurasi <code>requests</code> dan <code>limits</code> mencegah kelaparan sumber daya (<em>resource starvation</em>) antar pod di node yang sama.</li>
+    <li><strong>Probes:</strong> <code>readinessProbe</code> memastikan trafik hanya dialirkan ke pod yang siap merespons, sedangkan <code>livenessProbe</code> me-restart pod jika terjadi deadlock.</li>
+    <li><strong>Service Abstraction:</strong> Objek <code>Service</code> bertindak sebagai <em>stable network endpoint</em> dan <em>load balancer</em> yang merutekan trafik dari port 80 ke port 5000 pada pod terkait.</li>
+</ol>
+
+<h2>6. Repositori GitHub & Ketentuan Penyerahan</h2>
+<ul>
+    <li><strong>Tautan Repositori GitHub:</strong> <code>https://github.com/username/Tugas_Arsitekture_Perangkat_Lunak</code></li>
+    <li><strong>Verifikasi Kelayakan:</strong> Seluruh konfigurasi dan kode telah divalidasi dapat di-build dan dijalankan dengan perintah <code>docker build</code>, <code>docker run</code>, dan <code>docker compose up</code>.</li>
+</ul>
+
+</body>
+</html>

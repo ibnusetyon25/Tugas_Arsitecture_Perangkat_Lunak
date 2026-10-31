@@ -1,0 +1,21 @@
+# ==============================================================================
+# UNOPTIMIZED DOCKERFILE (Sebagai Baseline Pembanding Analisis)
+# ==============================================================================
+# Menggunakan base image standar full Debian yang berukuran sangat besar (~1 GB)
+FROM python:3.11
+
+# Menentukan direktori kerja
+WORKDIR /app
+
+# Menyalin seluruh folder sekaligus tanpa memanfaatkan layer caching secara optimal
+COPY . /app
+
+# Instalasi paket tanpa opsi --no-cache-dir, meninggalkan cache installer di layer
+RUN pip install -r requirements.txt
+
+# Port aplikasi
+EXPOSE 5000
+
+# Dijalankan sebagai default user (root) - risiko keamanan tinggi
+# Menggunakan server development Flask bawaan (tidak cocok untuk production)
+CMD ["python", "app.py"]

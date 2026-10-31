@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Python cache and virtual environment
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker / Compose local overrides
+Dockerfile.unoptimized
+docker-compose.override.yml
+.dockerignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation / Output
+*.md
+*.html
+*.pdf
